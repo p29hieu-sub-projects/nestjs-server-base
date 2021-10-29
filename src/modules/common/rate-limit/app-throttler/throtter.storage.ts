@@ -14,10 +14,8 @@ export class AppThrottlerStorage implements ThrottlerStorage {
 
   async addRecord(key: string, ttl: number): Promise<void> {
     const oldRecord = (await this.getRecord(key)) || [];
-    await this.cacheManager.set(
-      key,
-      [...oldRecord, Math.round(Math.random() * 1e7)],
-      { ttl },
-    );
+    await this.cacheManager.set(key, [...oldRecord, Date.now() + ttl * 1000], {
+      ttl,
+    });
   }
 }

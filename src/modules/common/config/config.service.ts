@@ -1,36 +1,26 @@
-import { Injectable } from "@nestjs/common";
-
 import { CONFIG_RATE_LIMIT } from "@/config";
-import {
-  THROTTLER_TTL,
-  RATE_LIMIT_NUM,
-} from "@/modules/common/config/config.constant";
+import { APP_CONFIG_KEYS } from "@/modules/common/config/config.constant";
+import { CACHE_MANAGER, Inject, Injectable } from "@nestjs/common";
+import { Cache } from "cache-manager";
 
-const data = {
-  [RATE_LIMIT_NUM]: 10,
-  [THROTTLER_TTL]: 60,
-};
+export type IBackendConfig = Record<APP_CONFIG_KEYS, string>;
 
-export const backendConfigs = {
-  THROTTLER_TTL: CONFIG_RATE_LIMIT.default_throttler_ttl,
-  RATE_LIMIT_NUM: CONFIG_RATE_LIMIT.default_rate_limit_num,
+export const backendConfigs: IBackendConfig = {
+  THROTTLER_TTL: CONFIG_RATE_LIMIT.default_throttler_ttl.toString(),
+  RATE_LIMIT_NUM: CONFIG_RATE_LIMIT.default_rate_limit_num.toString(),
 };
 
 @Injectable()
 export class ConfigService {
-  constructor() {
+  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {
     Object.keys(backendConfigs).forEach((key) => {
-      this.getValue(key).then((value) => {
-        backendConfigs[key] = parseInt(value) || backendConfigs[key];
+      this.cacheManager.get(key).then((value) => {
+        backendConfigs[key] = value || backendConfigs[key];
       });
     });
   }
 
   async getValue(key: string): Promise<string> {
-    return new Promise(function (resolve, reject) {
-      setTimeout(function () {
-        resolve(data[key]);
-      }, 2000);
-    });
+    return backendConfigs[key] || (await this.cacheManager.get(key));
   }
 }

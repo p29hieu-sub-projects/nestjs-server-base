@@ -12,8 +12,8 @@ import { backendConfigs } from "@/modules/common/config/config.service";
       inject: [AppThrottlerStorage],
       useFactory: async (storage: AppThrottlerStorage) => {
         return {
-          ttl: backendConfigs.THROTTLER_TTL,
-          limit: backendConfigs.RATE_LIMIT_NUM,
+          ttl: parseInt(backendConfigs.THROTTLER_TTL),
+          limit: parseInt(backendConfigs.RATE_LIMIT_NUM),
           storage,
         };
       },

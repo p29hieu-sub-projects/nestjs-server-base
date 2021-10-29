@@ -6,9 +6,11 @@ export const CONFIG_JWT = {
 };
 
 export const CONFIG_CACHE = {
-  uri: "redis://10.0.0.20:6379/2",
-  default_ttl: 10,
+  strategy: "redis", // 'local'
+  ttl: 60,
 };
+
+export const REDIS_URI = "redis://10.0.0.20:6379/2";
 
 export const CONFIG_RATE_LIMIT = {
   default_throttler_ttl: 60,
