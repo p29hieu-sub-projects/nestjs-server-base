@@ -1,0 +1,2 @@
+﻿export const THROTTLER_TTL = "THROTTLER_TTL";
+export const RATE_LIMIT_NUM = "RATE_LIMIT_NUM";
