@@ -6,7 +6,7 @@ export const CONFIG_JWT = {
 };
 
 export const CONFIG_CACHE = {
-  strategy: "redis", // 'local'
+  strategy: "local", // 'local' | 'redis'
   ttl: 60,
 };
 
